@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="page-title h2">Welcome back, <span class="grad-text">{{ user.username }}</span> 👋</h1>
+  <p class="text-muted">Pick a tool to get started. Everything below comes from your own saved activity.</p>
+  {% include 'tools/_ai_notice.html' %}
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-4 col-lg"><a class="glass glass-body d-block h-100" href="{% url 'tools:explain' %}"><span class="icon-chip mb-2">💡</span><div class="fw-semibold text-white">Explain Code</div><div class="small text-muted">Understand any snippet</div></a></div>
+    <div class="col-6 col-md-4 col-lg"><a class="glass glass-body d-block h-100" href="{% url 'tools:debug' %}"><span class="icon-chip mb-2">🐞</span><div class="fw-semibold text-white">Bug Detector</div><div class="small text-muted">Find likely causes</div></a></div>
+    <div class="col-6 col-md-4 col-lg"><a class="glass glass-body d-block h-100" href="{% url 'tools:tutor' %}"><span class="icon-chip mb-2">🎓</span><div class="fw-semibold text-white">AI Tutor</div><div class="small text-muted">Learn a topic</div></a></div>
+    <div class="col-6 col-md-4 col-lg"><a class="glass glass-body d-block h-100" href="{% url 'tools:quiz' %}"><span class="icon-chip mb-2">📝</span><div class="fw-semibold text-white">Quizzes</div><div class="small text-muted">Test yourself</div></a></div>
+    <div class="col-12 col-md-4 col-lg"><a class="glass glass-body d-block h-100" href="{% url 'tools:docs' %}"><span class="icon-chip mb-2">📄</span><div class="fw-semibold text-white">Docs Generator</div><div class="small text-muted">Write documentation</div></a></div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    {% for label, count in stats %}
+    <div class="col-6 col-md"><div class="glass glass-body"><div class="stat grad-text">{{ count }}</div><div class="small text-muted mt-1">{{ label }}</div></div></div>
+    {% endfor %}
+  </div>
+
+  {% if not has_activity %}
+  <div class="glass glass-body text-center py-5"><h5>No activity yet</h5><p class="text-muted mb-3">Try the Code Explainer with a snippet you're curious about.</p><a class="btn btn-grad" href="{% url 'tools:explain' %}">Explain some code</a></div>
+  {% else %}
+  <div class="row g-3">
+    <div class="col-lg-7"><div class="glass glass-body h-100">
+      <div class="card-title-sm">Recent activity</div>
+      <ul class="list-clean">{% for a in activity %}
+        <li class="d-flex justify-content-between gap-3"><span><span class="badge badge-soft me-2">{{ a.kind }}</span><a href="{{ a.get_absolute_url }}">{{ a.label }}</a></span><span class="text-muted small text-nowrap">{{ a.created_at|timesince }} ago</span></li>
+      {% endfor %}</ul>
+    </div></div>
+    <div class="col-lg-5"><div class="glass glass-body h-100">
+      <div class="card-title-sm">Saved explanations</div>
+      {% if saved %}<ul class="list-clean">{% for s in saved %}<li><a href="{{ s.get_absolute_url }}">{{ s.label }}</a></li>{% endfor %}</ul>
+      {% else %}<p class="text-muted small mb-0">Nothing saved yet. Use “Save” on an explanation to keep it here.</p>{% endif %}
+    </div></div>
+    <div class="col-lg-4"><div class="glass glass-body h-100"><div class="card-title-sm">Debugging history</div>
+      {% if recent_bugs %}<ul class="list-clean">{% for b in recent_bugs %}<li><a href="{{ b.get_absolute_url }}">{{ b.label }}</a></li>{% endfor %}</ul>{% else %}<p class="text-muted small mb-0">No debugging sessions yet.</p>{% endif %}</div></div>
+    <div class="col-lg-4"><div class="glass glass-body h-100"><div class="card-title-sm">Quiz results</div>
+      {% if recent_attempts %}<ul class="list-clean">{% for q in recent_attempts %}<li class="d-flex justify-content-between"><a href="{{ q.get_absolute_url }}">{{ q.quiz.topic }}</a><span class="fw-semibold">{{ q.score }}/{{ q.total }}</span></li>{% endfor %}</ul>{% else %}<p class="text-muted small mb-0">No quizzes taken yet.</p>{% endif %}</div></div>
+    <div class="col-lg-4"><div class="glass glass-body h-100"><div class="card-title-sm">Learning history</div>
+      {% if recent_sessions %}<ul class="list-clean">{% for s in recent_sessions %}<li><a href="{{ s.get_absolute_url }}">{{ s.label }}</a></li>{% endfor %}</ul>{% else %}<p class="text-muted small mb-0">No learning sessions yet.</p>{% endif %}</div></div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% if not ai_configured %}
+<div class="alert alert-warning">
+  <strong>AI isn't configured yet.</strong> Nothing will be generated until you add an API key.
+  <ol class="mb-0 mt-2 small">
+    <li>Copy <code>.env.example</code> to <code>.env</code>.</li>
+    <li>Set <code>AI_PROVIDER</code> (<code>anthropic</code> or <code>openai</code>) and <code>AI_API_KEY</code>.</li>
+    <li>Restart <code>python manage.py runserver</code>.</li>
+  </ol>
+</div>
+{% endif %}
+{% if error %}<div class="alert alert-danger" role="alert"><strong>Couldn't complete the request.</strong> {{ error.user_message }}</div>{% endif %}

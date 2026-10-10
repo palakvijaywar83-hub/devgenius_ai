@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}AI Tutor{% endblock %}
+{% block content %}
+<div class="container py-4"><div class="row g-4">
+  <div class="col-lg-8">
+    <h1 class="page-title h2">🎓 AI Learning Tutor</h1>
+    <p class="text-muted">Choose a topic, your level, and how you like to learn.</p>
+    {% include 'tools/_ai_notice.html' %}
+    <form method="post" class="glass glass-body" data-ai-form data-ai-message="Preparing your lesson…" novalidate>{% csrf_token %}
+      {% include 'tools/_form_fields.html' with form=form %}
+      <button class="btn btn-grad" type="submit">Start Lesson</button>
+    </form>
+  </div>
+  <div class="col-lg-4"><div class="glass glass-body"><div class="card-title-sm">Learning history</div>
+    <ul class="list-clean">{% for h in history %}<li><a href="{{ h.get_absolute_url }}">{{ h.label }}</a><div class="small text-muted">{{ h.level|title }} · {{ h.created_at|timesince }} ago</div></li>{% empty %}<li class="text-muted small">Nothing yet.</li>{% endfor %}</ul>
+  </div></div>
+</div></div>
+{% endblock %}

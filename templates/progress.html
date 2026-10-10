@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Learning Progress{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="page-title h2">Learning progress</h1>
+  <p class="text-muted">Based only on quizzes and tutor sessions you've completed here. It's an activity record, not a measure of coding mastery.</p>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="glass glass-body"><div class="stat grad-text">{{ completed }}</div><div class="small text-muted mt-1">Quizzes completed</div></div></div>
+    <div class="col-md-4"><div class="glass glass-body"><div class="stat grad-text">{% if overall is not None %}{{ overall }}%{% else %}—{% endif %}</div><div class="small text-muted mt-1">Overall quiz accuracy (correct answers ÷ questions)</div></div></div>
+    <div class="col-md-4"><div class="glass glass-body"><div class="stat grad-text">{% if best is not None %}{{ best }}%{% else %}—{% endif %}</div><div class="small text-muted mt-1">Best single quiz score</div></div></div>
+  </div>
+
+  {% if not topic_rows and not recent_attempts %}
+  <div class="glass glass-body text-center py-5"><p class="text-muted">Nothing to show yet. Take a quiz or start a tutor session.</p>
+    <a class="btn btn-grad" href="{% url 'tools:quiz' %}">Generate a quiz</a></div>
+  {% else %}
+  <div class="row g-3">
+    <div class="col-lg-7"><div class="glass glass-body h-100"><div class="card-title-sm">Topics practiced</div>
+      {% for t in topic_rows %}
+      <div class="mb-3">
+        <div class="d-flex justify-content-between small"><span class="fw-semibold">{{ t.label }}</span><span class="text-muted">{{ t.sessions }} session{{ t.sessions|pluralize }} · {{ t.quizzes }} quiz{{ t.quizzes|pluralize:"zes" }}{% if t.percent is not None %} · {{ t.percent }}% correct{% endif %}</span></div>
+        {% if t.percent is not None %}<div class="progress mt-1" role="progressbar" aria-valuenow="{{ t.percent }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar" style="width: {{ t.percent }}%"></div></div>{% endif %}
+      </div>{% endfor %}
+    </div></div>
+    <div class="col-lg-5">
+      <div class="glass glass-body mb-3"><div class="card-title-sm">Recent quiz scores</div>
+        {% for a in recent_attempts %}<div class="mb-2"><div class="d-flex justify-content-between small"><a href="{{ a.get_absolute_url }}">{{ a.quiz.topic }}</a><span>{{ a.score }}/{{ a.total }}</span></div>
+        <div class="progress mt-1"><div class="progress-bar" style="width: {{ a.percent }}%"></div></div></div>
+        {% empty %}<p class="text-muted small mb-0">No quizzes yet.</p>{% endfor %}
+      </div>
+      <div class="glass glass-body"><div class="card-title-sm">Recent learning sessions</div>
+        <ul class="list-clean">{% for s in recent_sessions %}<li class="d-flex justify-content-between"><a href="{{ s.get_absolute_url }}">{{ s.label }}</a><span class="text-muted small">{{ s.created_at|date:"M j" }}</span></li>
+        {% empty %}<li class="text-muted small">No sessions yet.</li>{% endfor %}</ul>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

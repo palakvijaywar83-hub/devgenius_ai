@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}{{ obj.topic }}{% endblock %}
+{% block content %}
+{% with r=obj.result %}
+<div class="container py-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div><a href="{% url 'tools:tutor' %}" class="small">← AI Tutor</a>
+      <h1 class="page-title h3 mb-0">{{ obj.topic }}</h1>
+      <div class="text-muted small">{{ obj.subject }} · {{ obj.level|title }} · {{ obj.style }}</div></div>
+    {% url 'tools:tutor_delete' obj.pk as del_url %}{% include 'tools/_delete_form.html' with action=del_url %}
+  </div>
+  <div class="row g-3">
+    <div class="col-12"><div class="glass glass-body">
+      {% if r.overview %}<p class="lead mb-2">{{ r.overview }}</p>{% endif %}<p class="mb-0" style="white-space:pre-line">{{ r.explanation }}</p></div></div>
+
+    {% if r.steps %}<div class="col-12"><div class="glass glass-body"><div class="card-title-sm">Step-by-step</div>
+      <div class="accordion" id="steps">{% for s in r.steps %}
+        <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#step{{ forloop.counter }}">{{ forloop.counter }}. {{ s.title|default:"Step" }}</button></h2>
+          <div id="step{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#steps"><div class="accordion-body">
+            <p {% if not s.code %}class="mb-0"{% endif %}>{{ s.detail }}</p>{% if s.code %}<pre class="code">{{ s.code }}</pre>{% endif %}</div></div></div>{% endfor %}
+      </div></div></div>{% endif %}
+
+    {% if r.real_world %}<div class="col-lg-6"><div class="glass glass-body h-100"><div class="card-title-sm">Real-world applications</div><ul class="mb-0">{% for i in r.real_world %}<li class="mb-1">{{ i }}</li>{% endfor %}</ul></div></div>{% endif %}
+    {% if r.mistakes %}<div class="col-lg-6"><div class="glass glass-body h-100"><div class="card-title-sm">Common mistakes</div><ul class="mb-0">{% for i in r.mistakes %}<li class="mb-1">{{ i }}</li>{% endfor %}</ul></div></div>{% endif %}
+
+    {% if r.practice %}<div class="col-12"><div class="glass glass-body"><div class="card-title-sm">Practice problems</div>
+      {% for p in r.practice %}<div class="mb-3"><div><strong>{{ forloop.counter }}.</strong> {{ p.question }}</div>
+        {% if p.hint %}<button class="btn btn-outline-soft btn-sm mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#hint{{ forloop.counter }}">Show hint</button>
+        <div class="collapse mt-2" id="hint{{ forloop.counter }}"><div class="small text-muted">💡 {{ p.hint }}</div></div>{% endif %}</div>{% endfor %}
+    </div></div>{% endif %}
+
+    <div class="col-12"><div class="glass glass-body" id="followup-chat" data-url="{% url 'tools:tutor_followup' obj.pk %}" data-csrf="{{ csrf_token }}">
+      <div class="card-title-sm">Ask a follow-up</div>
+      {% if r.follow_ups %}<div class="d-flex flex-wrap gap-2 mb-3">{% for f in r.follow_ups %}<button type="button" class="btn btn-outline-soft btn-sm text-start" data-followup="{{ f }}">{{ f }}</button>{% endfor %}</div>{% endif %}
+      <div id="followup-thread">{% for f in obj.followups %}<div class="chat-q">{{ f.question }}</div><div class="chat-a">{{ f.answer }}</div>{% endfor %}</div>
+      <div class="alert alert-danger py-2 small" id="followup-error" hidden></div>
+      <div class="input-group"><input id="followup-input" class="form-control" maxlength="500" placeholder="Ask anything about this topic…" aria-label="Follow-up question"><button class="btn btn-grad" id="followup-send" type="button">Ask</button></div>
+    </div></div>
+  </div>
+</div>
+{% endwith %}
+{% endblock %}

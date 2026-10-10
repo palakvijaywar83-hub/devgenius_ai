@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="container py-5"><div class="row justify-content-center"><div class="col-md-6 col-lg-5">
+  <div class="glass glass-body p-4">
+    <h2 class="page-title mb-1">Welcome back</h2><p class="text-muted">Log in to your DevGenius workspace.</p>
+    <form method="post" novalidate>{% csrf_token %}
+      {% include 'tools/_form_fields.html' with form=form %}
+      <input type="hidden" name="next" value="{{ next }}">
+      <button class="btn btn-grad w-100" type="submit">Log in</button>
+    </form>
+    <p class="text-muted small mt-3 mb-0">New here? <a href="{% url 'accounts:register' %}">Create an account</a></p>
+  </div>
+</div></div></div>
+{% endblock %}

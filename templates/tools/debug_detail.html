@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Bug Analysis{% endblock %}
+{% block content %}
+{% with r=obj.result %}
+<div class="container py-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div><a href="{% url 'tools:debug' %}" class="small">← Bug Detector</a><h1 class="page-title h3 mb-0">{{ obj.language }} bug analysis</h1></div>
+    {% url 'tools:debug_delete' obj.pk as del_url %}{% include 'tools/_delete_form.html' with action=del_url %}
+  </div>
+  <div class="alert alert-warning py-2 small">The suggested fix below was <strong>not executed or verified</strong>. Test it yourself before using it.</div>
+  <div class="row g-3">
+    <div class="col-lg-6"><div class="glass glass-body h-100"><div class="card-title-sm">Your code</div><pre class="code">{{ obj.code }}</pre>
+      {% if obj.error_message %}<div class="card-title-sm mt-3">Error message</div><pre class="code wrap">{{ obj.error_message }}</pre>{% endif %}
+      {% if obj.expected_behavior %}<div class="card-title-sm mt-3">Expected behavior</div><p class="mb-0">{{ obj.expected_behavior }}</p>{% endif %}</div></div>
+    <div class="col-lg-6">
+      <div class="glass glass-body mb-3"><div class="card-title-sm">Likely cause</div><p class="mb-0">{{ r.likely_cause }}</p></div>
+      {% if r.location %}<div class="glass glass-body mb-3"><div class="card-title-sm">Relevant location</div><p class="mb-0">{{ r.location }}</p></div>{% endif %}
+      <div class="glass glass-body"><div class="card-title-sm">Suggested correction</div><p class="mb-0">{{ r.suggested_fix }}</p></div>
+    </div>
+    {% if r.corrected_code %}<div class="col-12"><div class="glass glass-body"><div class="d-flex justify-content-between"><div class="card-title-sm">Suggested corrected code (unverified)</div><button class="btn btn-outline-soft btn-sm" data-copy-target="#fixed-code" type="button">Copy</button></div><pre class="code" id="fixed-code">{{ r.corrected_code }}</pre></div></div>{% endif %}
+    {% if r.fix_explanation %}<div class="col-lg-6"><div class="glass glass-body h-100"><div class="card-title-sm">Why the fix works</div><p class="mb-0">{{ r.fix_explanation }}</p></div></div>{% endif %}
+    {% if r.test_cases %}<div class="col-lg-6"><div class="glass glass-body h-100"><div class="card-title-sm">Recommended test cases</div>
+      <ul class="list-clean">{% for t in r.test_cases %}<li><div>{{ t.description }}</div>{% if t.input %}<div class="small text-muted">Input: <code>{{ t.input }}</code></div>{% endif %}{% if t.expected %}<div class="small text-muted">Expected: <code>{{ t.expected }}</code></div>{% endif %}</li>{% endfor %}</ul></div></div>{% endif %}
+  </div>
+</div>
+{% endwith %}
+{% endblock %}

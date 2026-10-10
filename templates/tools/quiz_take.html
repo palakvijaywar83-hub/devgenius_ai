@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Quiz: {{ quiz.topic }}{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width:820px">
+  <a href="{% url 'tools:quiz' %}" class="small">← Quizzes</a>
+  <h1 class="page-title h3">{{ quiz.language }} · {{ quiz.topic }} <span class="badge badge-soft ms-1">{{ quiz.difficulty|title }}</span></h1>
+  <form method="post" action="{% url 'tools:quiz_submit' quiz.pk %}">{% csrf_token %}
+    {% for q in questions %}
+    <div class="glass glass-body mb-3"><div class="fw-semibold mb-3">{{ forloop.counter }}. {{ q.text }}</div>
+      {% for opt in q.options %}<label class="opt"><input type="radio" name="q_{{ q.pk }}" value="{{ forloop.counter0 }}" {% if forloop.first %}required{% endif %}>{{ opt }}</label>{% endfor %}
+    </div>{% endfor %}
+    <button class="btn btn-grad btn-lg" type="submit">Submit answers</button>
+  </form>
+</div>
+{% endblock %}

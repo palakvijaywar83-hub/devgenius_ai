@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Quiz results{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width:820px">
+  <a href="{% url 'tools:quiz' %}" class="small">← Quizzes</a>
+  <div class="glass glass-body text-center my-3">
+    <div class="card-title-sm">{{ attempt.quiz.language }} · {{ attempt.quiz.topic }}</div>
+    <div class="stat grad-text" style="font-size:3rem">{{ attempt.score }}/{{ attempt.total }}</div>
+    <div class="text-muted">{{ attempt.percent }}% correct</div>
+    <div class="progress mt-3 mx-auto" style="max-width:360px"><div class="progress-bar" style="width: {{ attempt.percent }}%"></div></div>
+    <div class="mt-3 d-flex justify-content-center gap-2"><a class="btn btn-grad btn-sm" href="{{ attempt.quiz.get_absolute_url }}">Retake</a><a class="btn btn-outline-soft btn-sm" href="{% url 'tools:quiz' %}">New quiz</a></div>
+  </div>
+  {% for row in rows %}
+  <div class="glass glass-body mb-3">
+    <div class="fw-semibold mb-2">{{ forloop.counter }}. {{ row.q.text }} {% if row.is_correct %}<span class="badge text-bg-success">Correct</span>{% else %}<span class="badge text-bg-danger">{% if row.chosen_text %}Incorrect{% else %}Unanswered{% endif %}</span>{% endif %}</div>
+    {% for opt in row.q.options %}<div class="opt {% if forloop.counter0 == row.q.correct_index %}correct{% elif forloop.counter0 == row.chosen %}wrong{% endif %}">{{ opt }}{% if forloop.counter0 == row.chosen %} <span class="small text-muted">(your answer)</span>{% endif %}{% if forloop.counter0 == row.q.correct_index %} <span class="small">✓ correct answer</span>{% endif %}</div>{% endfor %}
+    {% if row.q.explanation %}<div class="small text-muted mt-2">💡 {{ row.q.explanation }}</div>{% endif %}
+  </div>{% endfor %}
+</div>
+{% endblock %}

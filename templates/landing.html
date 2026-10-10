@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Understand Code. Fix Bugs. Learn Smarter.{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="badge badge-soft px-3 py-2 mb-3">AI for Learning &amp; Developer Productivity</span>
+        <h1>Understand Code.<br><span class="grad-text">Fix Bugs.</span><br>Learn Smarter.</h1>
+        <p class="lead text-muted mt-3">DevGenius AI is a developer workspace that doesn't just hand you answers — it explains the <em>reasoning</em> behind them, so you actually learn.</p>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          {% if user.is_authenticated %}<a href="{% url 'core:dashboard' %}" class="btn btn-grad btn-lg">Open Dashboard</a>
+          {% else %}<a href="{% url 'accounts:register' %}" class="btn btn-grad btn-lg">Get Started</a>{% endif %}
+          <a href="#features" class="btn btn-outline-soft btn-lg">Explore Features</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-window" aria-label="Illustrative example of the workspace">
+          <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="ms-2">example.py — illustrative sample</span></div>
+          <pre class="code border-0 rounded-0 mb-0">def mean(nums):
+    return sum(nums) / len(nums)
+
+print(mean([]))</pre>
+          <div class="p-3 border-top" style="border-color:var(--border)!important">
+            <div class="card-title-sm">Smart Bug Detector · sample</div>
+            <div class="small"><strong>Likely cause:</strong> dividing by <code>len(nums)</code> when the list is empty raises <code>ZeroDivisionError</code>.</div>
+            <div class="small text-muted mt-1">Suggested fix — not executed or verified. Guard against empty input first.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="features">
+  <div class="container">
+    <h2 class="page-title text-center">Everything you need to <span class="grad-text">learn while you build</span></h2>
+    <p class="text-center text-muted mb-5">Six tools, one workspace, every result saved to your private history.</p>
+    <div class="row g-3">
+      <div class="col-md-6 col-lg-4"><div class="glass glass-body h-100"><span class="icon-chip mb-3">💡</span><h5>AI Code Explainer</h5><p class="text-muted mb-0">Paste code and get a plain-language walkthrough, key variables, complexity, and edge cases at your level.</p></div></div>
+      <div class="col-md-6 col-lg-4"><div class="glass glass-body h-100"><span class="icon-chip mb-3">🐞</span><h5>Smart Bug Detector</h5><p class="text-muted mb-0">Share the code, error, and expected behavior. Get the likely cause, a suggested fix, and test ideas.</p></div></div>
+      <div class="col-md-6 col-lg-4"><div class="glass glass-body h-100"><span class="icon-chip mb-3">🎓</span><h5>AI Learning Tutor</h5><p class="text-muted mb-0">Step-by-step lessons in your preferred style, with practice problems, hints, and follow-up questions.</p></div></div>
+      <div class="col-md-6 col-lg-4"><div class="glass glass-body h-100"><span class="icon-chip mb-3">📝</span><h5>Quiz Generator</h5><p class="text-muted mb-0">Generate multiple-choice quizzes. Answers are scored on the server, with explanations for every question.</p></div></div>
+      <div class="col-md-6 col-lg-4"><div class="glass glass-body h-100"><span class="icon-chip mb-3">📄</span><h5>Documentation Generator</h5><p class="text-muted mb-0">Turn code or a project idea into structured docs with one-click copy.</p></div></div>
+      <div class="col-md-6 col-lg-4"><div class="glass glass-body h-100"><span class="icon-chip mb-3">📈</span><h5>Learning Progress</h5><p class="text-muted mb-0">See your real quiz scores and topics practiced — computed only from your own saved activity.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="how">
+  <div class="container">
+    <h2 class="page-title text-center mb-5">How it works</h2>
+    <div class="row g-4 text-center">
+      <div class="col-md-4"><div class="step-num mx-auto mb-3">1</div><h5>Bring your code or topic</h5><p class="text-muted">Paste code, an error, or choose something you want to learn.</p></div>
+      <div class="col-md-4"><div class="step-num mx-auto mb-3">2</div><h5>Get reasoning, not just answers</h5><p class="text-muted">The AI explains <em>why</em>, in structured cards matched to your level.</p></div>
+      <div class="col-md-4"><div class="step-num mx-auto mb-3">3</div><h5>Practice and track</h5><p class="text-muted">Take quizzes, revisit history, and watch your real activity add up.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="benefits">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-6"><div class="glass glass-body h-100"><h4>For students</h4><ul class="list-clean text-muted"><li>Understand unfamiliar code at beginner level</li><li>Learn from mistakes instead of copying fixes</li><li>Test yourself with auto-scored quizzes</li></ul></div></div>
+      <div class="col-md-6"><div class="glass glass-body h-100"><h4>For developers</h4><ul class="list-clean text-muted"><li>Triage errors faster with likely causes and test ideas</li><li>Onboard onto legacy code quicker</li><li>Draft documentation in seconds</li></ul></div></div>
+    </div>
+    <p class="text-center text-muted small mt-4">AI suggestions are not executed or verified by DevGenius AI. Always review and test before relying on them.</p>
+  </div>
+</section>
+
+<footer class="site"><div class="container d-flex flex-wrap justify-content-between gap-2">
+  <div><strong class="text-white">DevGenius AI</strong> — Understand Code. Fix Bugs. Learn Smarter.</div>
+  <div>Built for Hackathon Track PS 01 · AI for Learning &amp; Developer Productivity</div>
+</div></footer>
+{% endblock %}

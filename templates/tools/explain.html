@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Code Explainer{% endblock %}
+{% block content %}
+<div class="container py-4"><div class="row g-4">
+  <div class="col-lg-8">
+    <h1 class="page-title h2">💡 AI Code Explainer</h1>
+    <p class="text-muted">Paste code and choose a level. You'll get the reasoning, not just a summary.</p>
+    {% include 'tools/_ai_notice.html' %}
+    <form method="post" class="glass glass-body" data-ai-form data-ai-message="Reading your code…" novalidate>{% csrf_token %}
+      {% include 'tools/_form_fields.html' with form=form %}
+      <button class="btn btn-grad" type="submit">Explain Code</button>
+    </form>
+  </div>
+  <div class="col-lg-4">
+    <div class="glass glass-body"><div class="card-title-sm">Recent explanations</div>
+      <ul class="list-clean">{% for h in history %}<li><a href="{{ h.get_absolute_url }}">{{ h.label }}</a><div class="small text-muted">{{ h.level|title }} · {{ h.created_at|timesince }} ago{% if h.is_saved %} · ★ saved{% endif %}</div></li>
+      {% empty %}<li class="text-muted small">Nothing yet.</li>{% endfor %}</ul>
+    </div>
+  </div>
+</div></div>
+{% endblock %}

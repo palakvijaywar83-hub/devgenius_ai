@@ -1,0 +1,3 @@
+<form method="post" action="{{ action }}" data-confirm="Delete this record permanently?" class="d-inline">
+  {% csrf_token %}<button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+</form>

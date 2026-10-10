@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Quizzes{% endblock %}
+{% block content %}
+<div class="container py-4"><div class="row g-4">
+  <div class="col-lg-6">
+    <h1 class="page-title h2">📝 AI Quiz Generator</h1>
+    <p class="text-muted">Multiple-choice quizzes, scored on the server.</p>
+    {% include 'tools/_ai_notice.html' %}
+    <form method="post" class="glass glass-body" data-ai-form data-ai-message="Writing your quiz…" novalidate>{% csrf_token %}
+      {% include 'tools/_form_fields.html' with form=form %}
+      <button class="btn btn-grad" type="submit">Generate Quiz</button>
+    </form>
+  </div>
+  <div class="col-lg-6">
+    <div class="glass glass-body mb-3"><div class="card-title-sm">Your quizzes</div>
+      <ul class="list-clean">{% for q in quizzes %}<li class="d-flex justify-content-between align-items-center gap-2">
+        <span><a href="{{ q.get_absolute_url }}">{{ q.language }} · {{ q.topic }}</a><div class="small text-muted">{{ q.difficulty|title }} · {{ q.questions.all|length }} questions · {{ q.attempts.all|length }} attempt{{ q.attempts.all|length|pluralize }}</div></span>
+        <span class="d-flex gap-1"><a class="btn btn-outline-soft btn-sm" href="{{ q.get_absolute_url }}">Take</a>{% url 'tools:quiz_delete' q.pk as del_url %}{% include 'tools/_delete_form.html' with action=del_url %}</span></li>
+      {% empty %}<li class="text-muted small">No quizzes yet.</li>{% endfor %}</ul></div>
+    <div class="glass glass-body"><div class="card-title-sm">Quiz history</div>
+      <ul class="list-clean">{% for a in attempts %}<li class="d-flex justify-content-between"><a href="{{ a.get_absolute_url }}">{{ a.quiz.topic }}</a><span><strong>{{ a.score }}/{{ a.total }}</strong> <span class="text-muted small">· {{ a.created_at|date:"M j, H:i" }}</span></span></li>
+      {% empty %}<li class="text-muted small">No attempts yet.</li>{% endfor %}</ul></div>
+  </div>
+</div></div>
+{% endblock %}
